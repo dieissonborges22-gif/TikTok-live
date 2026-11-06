@@ -36,7 +36,7 @@ body:before{background:#e83db9;top:-150px;left:-120px}body:after{background:#6b5
 /* Atualização: ilustração feminina e seletor de voz */
 .character{width:300px;height:440px;filter:drop-shadow(0 12px 24px #08051d99)}
 .character-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:auto}
-.mouth{position:absolute;z-index:8;top:34%;left:48%;width:20px;height:9px;border-radius:0 0 12px 12px;background:#a33b79;border:2px solid #28142f;opacity:.75;pointer-events:none}
+.mouth{position:absolute;z-index:8;top:36.8%;left:50%;transform:translateX(-50%);width:21px;height:9px;border-radius:0 0 12px 12px;background:#a33b79;border:2px solid #28142f;opacity:1;pointer-events:none;box-shadow:0 2px 0 #f8b2cf}
 .mouth.talking{height:20px;animation:talk .13s infinite alternate}
 .voice-picker{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #b77aff;border-radius:24px;background:#21163f;color:#f8eaff;font-size:12px;font-weight:700}
 .voice-picker select{max-width:240px;border:0;outline:0;background:#38205d;color:#fff;border-radius:12px;padding:7px;font-size:12px}
