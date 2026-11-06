@@ -30,7 +30,7 @@
 <circle cx="255" cy="258" r="8" fill="#fff"/><circle cx="359" cy="258" r="8" fill="#fff"/>
 <path d="M211 224q34-27 65 0M328 224q34-27 65 0" fill="none" stroke="#281536" stroke-width="12" stroke-linecap="round"/>
 <ellipse cx="207" cy="318" rx="24" ry="10" fill="#f47eaa" opacity=".6"/><ellipse cx="395" cy="318" rx="24" ry="10" fill="#f47eaa" opacity=".6"/>
-<path d="M282 335q18 25 38 0" fill="#9e316e" stroke="#32152f" stroke-width="7" stroke-linecap="round"/>
+<!-- A boca é desenhada pelo elemento animado #mouth do app.js/CSS para evitar duplicação. -->
 <!-- neck and body -->
 <path d="M270 390h60v68h-60z" fill="url(#skin)" stroke="#21142f" stroke-width="12"/>
 <path d="M190 456Q300 420 410 456L450 660Q300 720 150 660Z" fill="url(#cloth)" stroke="#160e28" stroke-width="18"/>
