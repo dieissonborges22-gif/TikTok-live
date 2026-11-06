@@ -1,38 +1,7 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-const PORT = process.env.PORT || 3000;
-
-app.use(express.static("public"));
-
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok", app: "TikTok LIVE Interactive" });
-});
-
-io.on("connection", (socket) => {
-  console.log("Overlay conectado:", socket.id);
-
-  socket.on("test-like", () => {
-    io.emit("character-reaction", {
-      type: "like",
-      message: "Obrigado pelas curtidas! ❤️"
-    });
-  });
-
-  socket.on("test-gift", () => {
-    io.emit("character-reaction", {
-      type: "gift",
-      message: "Uau! Obrigado pelo presente! 🎁"
-    });
-  });
-});
-
-server.listen(PORT, "0.0.0.0", () => {
-  console.log(`TikTok LIVE Interactive rodando em http://localhost:${PORT}`);
-  console.log("Abra esse endereço no navegador para testar o personagem.");
-});
+const express=require("express"),http=require("http");const {Server}=require("socket.io");const {TikTokLiveConnection}=require("tiktok-live-connector");
+const app=express(),server=http.createServer(app),io=new Server(server),PORT=process.env.PORT||3000;app.use(express.static("public"));app.get("/health",(_,r)=>r.json({status:"ok"}));
+let live=null,user="",autoReply=false,lastGlobal=0;const lastUser=new Map();
+function replyFor(comment,nick){const t=String(comment||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");const n=String(nick||"amigo").replace(/[^\p{L}\p{N}_ -]/gu,"").slice(0,18)||"amigo";if(!t.trim()||t.length>300)return null;if(/\b(oi|ola|opa|eai|bom dia|boa tarde|boa noite)\b/.test(t))return `Oii, ${n}! Que bom ter você aqui! 💜`;if(/\b(nome|quem e voce|quem e vc)\b/.test(t))return `Eu sou a Pixel Girl, a mascote dessa live! Prazer, ${n}! ✨`;if(/\b(linda|bonita|fofa|perfeita|gata)\b/.test(t))return `Aaaah, obrigada pelo carinho, ${n}! 💖`;if(/\b(danca|dancar)\b/.test(t))return `Você pediu dança, ${n}? Vou guardar essa ideia! 💃`;if(/\b(te amo|amor)\b/.test(t))return `Muito carinho pra você também, ${n}! 💜`;if(/\b(tchau|fui|ate mais)\b/.test(t))return `Até mais, ${n}! Obrigada por passar na live! 👋`;if(t.includes("?"))return `Boa pergunta, ${n}! Ainda estou aprendendo, mas adorei sua pergunta! 💜`;return `Li seu comentário, ${n}! Obrigada por participar da live! 💜`;}
+function stop(){if(live){try{live.removeAllListeners();live.disconnect()}catch(e){}}live=null;user="";}
+io.on("connection",s=>{s.emit("live-status",{connected:!!live,username:user});s.on("connect-live",async raw=>{const name=String(raw||"").trim().replace(/^@/,"");if(!/^[a-zA-Z0-9._]{2,30}$/.test(name)){io.emit("live-status",{connected:false,error:"Digite um @ válido do TikTok."});return;}stop();try{live=new TikTokLiveConnection(name);user=name;live.on("chat",d=>{const nick=d.nickname||d.uniqueId||"Espectador",comment=d.comment||"";io.emit("chat-comment",{nickname:nick,comment});if(!autoReply)return;const now=Date.now(),key=String(d.uniqueId||nick).toLowerCase();if(now-(lastUser.get(key)||0)<20000||now-lastGlobal<5000)return;const answer=replyFor(comment,nick);if(answer){lastUser.set(key,now);lastGlobal=now;io.emit("character-reaction",{type:"chat",message:answer});}});live.on("gift",d=>io.emit("character-reaction",{type:"gift",message:`Muito obrigada pelo presente, ${d.nickname||"amigo"}! 🎁💖`}));await live.connect();io.emit("live-status",{connected:true,username:name});}catch(e){stop();io.emit("live-status",{connected:false,error:"Falha ao conectar. Confira o @ e se a LIVE está ativa. O conector usa protocolo não oficial do TikTok."});console.error(e.message);}});s.on("disconnect-live",()=>{stop();io.emit("live-status",{connected:false});});s.on("toggle-auto-reply",v=>{autoReply=!!v;io.emit("auto-reply-status",autoReply)});s.on("test-like",()=>io.emit("character-reaction",{type:"like",message:"Obrigada pelas curtidas! Vocês são demais! ❤️"}));s.on("test-gift",()=>io.emit("character-reaction",{type:"gift",message:"Aaaah, obrigada pelo presente! 🎁💖"}));});
+server.listen(PORT,"0.0.0.0",()=>console.log(`TikTok LIVE Interactive em http://localhost:${PORT}`));
