@@ -31,7 +31,7 @@ Aplicativo próprio de personagem virtual para interagir com uma LIVE do TikTok.
 npm install
 ```
 
-5. (Opcional) Copie `.env.example` para `.env` e adicione sua chave Gemini. Sem chave, o modo de respostas locais continua funcionando.
+5. (Opcional) Crie um arquivo `.env` na pasta do projeto e adicione sua chave Gemini. Sem chave, o modo de respostas locais continua funcionando.
 6. Inicie:
 
 ```bash
