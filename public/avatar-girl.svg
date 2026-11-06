@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900">
+<defs>
+ <linearGradient id="hair" x2="1" y2="1"><stop stop-color="#21102f"/><stop offset=".48" stop-color="#6730a1"/><stop offset="1" stop-color="#ed4bd5"/></linearGradient>
+ <linearGradient id="skin" x2=".8" y2="1"><stop stop-color="#ffe0d2"/><stop offset="1" stop-color="#e9a1b7"/></linearGradient>
+ <linearGradient id="cloth" x2="1" y2="1"><stop stop-color="#30203f"/><stop offset="1" stop-color="#100d23"/></linearGradient>
+ <linearGradient id="neon" x2="1"><stop stop-color="#f84dc9"/><stop offset="1" stop-color="#8d4bff"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<ellipse cx="300" cy="842" rx="190" ry="25" fill="#080516" opacity=".55"/>
+<!-- long hair silhouette -->
+<path d="M148 330Q95 115 230 70Q365 5 451 130Q520 220 457 460L495 695Q445 770 400 680L365 425H220L180 690Q120 760 92 680L145 430Z" fill="url(#hair)" stroke="#160e28" stroke-width="17"/>
+<path d="M160 365Q95 485 130 650M435 355Q505 480 460 650" fill="none" stroke="#ed55dc" stroke-width="13" opacity=".7"/>
+<!-- cat ears -->
+<path d="M172 145L155 28Q225 35 260 110M340 108Q380 28 455 24L435 160Z" fill="#30203f" stroke="#140d25" stroke-width="18"/>
+<path d="M185 105L179 58Q216 67 231 108M371 105Q397 61 430 55L421 119Z" fill="#ff72df" filter="url(#glow)"/>
+<!-- face -->
+<path d="M175 160Q190 95 300 94Q416 96 432 175L414 328Q391 399 300 402Q205 398 185 326Z" fill="url(#skin)" stroke="#21142f" stroke-width="17"/>
+<!-- bangs -->
+<path d="M167 208Q143 95 254 75Q371 38 435 149L431 226Q393 194 373 146Q355 203 323 213Q303 171 292 145Q269 205 232 221Q206 194 199 169Z" fill="url(#hair)" stroke="#180e29" stroke-width="14"/>
+<path d="M206 135Q256 74 309 94M342 93Q395 103 414 151" fill="none" stroke="#b84ee9" stroke-width="12"/>
+<!-- headphones -->
+<path d="M145 245Q116 91 300 70Q484 88 455 245" fill="none" stroke="#a94cff" stroke-width="28" filter="url(#glow)"/>
+<rect x="118" y="211" width="62" height="120" rx="22" fill="#2b1b40" stroke="#f65cdb" stroke-width="12"/>
+<rect x="420" y="211" width="62" height="120" rx="22" fill="#2b1b40" stroke="#f65cdb" stroke-width="12"/>
+<path d="M139 258l20 20-20 20 20 20" fill="none" stroke="#ff83e4" stroke-width="9"/>
+<path d="M441 258l20 20-20 20 20 20" fill="none" stroke="#ff83e4" stroke-width="9"/>
+<!-- eyes -->
+<ellipse cx="245" cy="265" rx="28" ry="38" fill="#fff" stroke="#2a173b" stroke-width="8"/><ellipse cx="359" cy="265" rx="28" ry="38" fill="#fff" stroke="#2a173b" stroke-width="8"/>
+<ellipse cx="250" cy="270" rx="16" ry="28" fill="#7735ba"/><ellipse cx="354" cy="270" rx="16" ry="28" fill="#7735ba"/>
+<circle cx="255" cy="258" r="8" fill="#fff"/><circle cx="359" cy="258" r="8" fill="#fff"/>
+<path d="M211 224q34-27 65 0M328 224q34-27 65 0" fill="none" stroke="#281536" stroke-width="12" stroke-linecap="round"/>
+<ellipse cx="207" cy="318" rx="24" ry="10" fill="#f47eaa" opacity=".6"/><ellipse cx="395" cy="318" rx="24" ry="10" fill="#f47eaa" opacity=".6"/>
+<path d="M282 335q18 25 38 0" fill="#9e316e" stroke="#32152f" stroke-width="7" stroke-linecap="round"/>
+<!-- neck and body -->
+<path d="M270 390h60v68h-60z" fill="url(#skin)" stroke="#21142f" stroke-width="12"/>
+<path d="M190 456Q300 420 410 456L450 660Q300 720 150 660Z" fill="url(#cloth)" stroke="#160e28" stroke-width="18"/>
+<path d="M190 468Q300 438 410 468L420 635Q300 680 180 635Z" fill="none" stroke="url(#neon)" stroke-width="13"/>
+<path d="M235 485Q300 520 365 485" fill="none" stroke="#ff7adf" stroke-width="12"/>
+<path d="M300 540l-24-22q-30-32-48 0q-14 29 72 84q86-55 72-84q-18-32-48 0Z" fill="#ff5acb" stroke="#ffd0f3" stroke-width="8" filter="url(#glow)"/>
+<!-- arms -->
+<path d="M184 480Q120 500 103 630Q105 674 147 668L211 534M414 480Q480 500 495 630Q493 674 451 668L388 534" fill="none" stroke="#21142f" stroke-width="48" stroke-linecap="round"/>
+<path d="M184 480Q120 500 103 630M414 480Q480 500 495 630" fill="none" stroke="url(#skin)" stroke-width="31" stroke-linecap="round"/>
+<path d="M183 476l-25 44M417 476l25 44" stroke="#a94cff" stroke-width="15"/>
+<!-- skirt -->
+<path d="M175 646Q300 680 425 646L470 755Q300 795 130 755Z" fill="#25172f" stroke="#130d22" stroke-width="17"/>
+<path d="M145 746Q300 783 455 746" fill="none" stroke="#f34dcc" stroke-width="15"/>
+<path d="M215 665l-12 85M270 675l-4 87M330 675l4 87M385 665l12 85" stroke="#7040a5" stroke-width="8"/>
+<!-- legs and boots -->
+<path d="M215 765L205 835M385 765L395 835" stroke="url(#skin)" stroke-width="43" stroke-linecap="round"/>
+<path d="M172 830h73l-5 47h-87q-7-26 19-47M355 830h73q26 21 19 47h-87Z" fill="#24172f" stroke="#130d22" stroke-width="15"/>
+<path d="M180 850h57M363 850h57" stroke="#f34dcc" stroke-width="10"/>
+<path d="M200 860l12 10 12-10M388 860l12 10 12-10" fill="none" stroke="#ff75dd" stroke-width="7"/>
+</svg>
