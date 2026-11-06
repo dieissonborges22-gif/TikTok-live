@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok LIVE Interactive</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="scene">
+    <div class="status"><span class="dot"></span> PERSONAGEM ONLINE</div>
+    <section class="character-wrap">
+      <div id="character" class="character" aria-label="Personagem mascote">
+        <div class="ears"><i></i><i></i></div>
+        <div class="face">
+          <div class="eyes"><i></i><i></i></div>
+          <div class="cheeks"><i></i><i></i></div>
+          <div class="mouth"></div>
+        </div>
+        <div class="body"></div>
+      </div>
+      <div id="bubble" class="bubble">Oi! Estou esperando as curtidas e os presentes! 👋</div>
+    </section>
+    <section class="controls">
+      <button id="likeBtn">❤️ Testar curtida</button>
+      <button id="giftBtn">🎁 Testar presente</button>
+    </section>
+    <p class="hint">Modo de demonstração • Os botões simulam eventos para testar as animações.</p>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
