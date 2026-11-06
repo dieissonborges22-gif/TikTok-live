@@ -43,3 +43,12 @@ body:before{background:#e83db9;top:-150px;left:-120px}body:after{background:#6b5
 @media(max-width:600px){.character{width:270px;height:410px}.voice-picker{width:100%;justify-content:center}.voice-picker select{max-width:65%}}
 
 .chat-panel{width:min(100%,620px);margin:20px auto 0;padding:18px;border:1px solid #b77aff88;border-radius:20px;background:#100c2de8;box-shadow:0 10px 35px #0005;text-align:left}.chat-panel h2{margin:0 0 5px;font-size:17px;color:#ffd8fa}.chat-note{margin:0 0 12px;color:#d7c5ef;font-size:12px}.connect-row{display:flex;gap:8px;flex-wrap:wrap}.connect-row input{flex:1;min-width:150px;padding:12px 14px;border:1px solid #9e71d5;border-radius:24px;background:#21163f;color:white;outline:none}.connect-row button{padding:10px 14px;font-size:12px}.auto-reply{display:flex;align-items:center;gap:9px;margin:15px 0;color:#f8eaff;font-size:13px}.auto-reply input{accent-color:#d54bd0;width:17px;height:17px}.recent-chat{padding:12px;border-radius:14px;background:#09071d;color:#e8dafa;font-size:12px}.recent-chat strong{color:#ff9ee7}.recent-chat p{margin:8px 0 0;padding-top:7px;border-top:1px solid #ffffff18;overflow-wrap:anywhere}.connect-row button:disabled{opacity:.5;cursor:not-allowed}
+/* Painel de métricas e reações do primeiro upgrade */
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:17px auto;max-width:620px}
+.stats-grid div{display:flex;flex-direction:column;gap:3px;padding:12px 7px;border:1px solid #bd82ff55;border-radius:13px;background:#100c2dbb}
+.stats-grid strong{font-size:20px;color:#ff9ce9}.stats-grid span{font-size:10px;color:#d7c9ed;text-transform:uppercase;letter-spacing:.5px}
+.recent-chat{max-width:620px;margin:14px auto;padding:13px;border:1px solid #bd82ff55;border-radius:14px;background:#100c2dbb;text-align:left}
+.recent-chat>strong{display:block;margin-bottom:8px;color:#ffb4ed}.recent-chat p{margin:5px 0;padding:7px 9px;border-radius:8px;background:#ffffff0d;font-size:12px;overflow-wrap:anywhere}
+.recent-chat .connect-row{margin-top:8px}.recent-chat input{min-width:0}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+@media(max-width:600px){.stage{height:420px}.bubble{right:0;top:5px;width:175px;font-size:12px}.character-wrap{transform:scale(.84)}.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.connect-row{flex-wrap:wrap}.connect-row input{width:100%}}
