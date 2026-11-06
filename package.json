@@ -1,0 +1,16 @@
+{
+  "name": "tiktok-live-interactive",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Personagem interativo para TikTok LIVE",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1",
+    "tiktok-live-connector": "^2.1.0"
+  }
+}
