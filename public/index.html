@@ -10,28 +10,19 @@
   <section class="stage">
     <div class="floating-heart h1">♥</div><div class="floating-heart h2">♥</div><div class="floating-heart h3">♥</div>
     <div class="character-wrap">
-      <div id="character" class="character" aria-label="Avatar feminino pixel art">
-        <div class="hair-back"></div>
-        <div class="cat-ears"><i></i><i></i></div>
-        <div class="headphones"><i class="cup left"></i><i class="cup right"></i></div>
-        <div class="hair-fringe"></div>
-        <div class="face">
-          <div class="eyes"><i></i><i></i></div><div class="blush"><i></i><i></i></div><div id="mouth" class="mouth"></div>
-        </div>
-        <div class="neck"></div>
-        <div class="arms"><i class="arm left"></i><i class="arm right"></i></div>
-        <div class="torso"><span class="heart-logo">♥</span></div>
-        <div class="skirt"></div>
-        <div class="legs"><i></i><i></i></div><div class="boots"><i></i><i></i></div>
+      <div id="character" class="character" aria-label="Avatar feminina gamer">
+        <img class="character-art" src="/avatar-girl.svg" alt="Personagem feminina de cabelo roxo, headset de gatinha e roupa gamer neon">
+        <div id="mouth" class="mouth"></div>
       </div>
     </div>
-    <div id="bubble" class="bubble" aria-live="polite">Oii, chat! Vamos deixar essa live incrível? ✨</div>
+    <div id="bubble" class="bubble" aria-live="polite">Oii, chat! Eu sou a Pixel Girl! Vamos deixar essa live incrível? ✨</div>
   </section>
   <section class="controls">
     <button id="likeBtn">💗 Testar curtida</button><button id="giftBtn">🎁 Testar presente</button>
     <button id="voiceBtn" class="voice-button" aria-pressed="true">🔊 Voz ativada</button>
+    <label class="voice-picker">Voz da personagem <select id="voiceSelect" aria-label="Selecionar voz feminina"></select></label>
   </section>
-  <p class="hint">Avatar feminino pixel-art • Reações de demonstração • Voz do navegador</p>
+  <p id="voiceStatus" class="hint">Avatar feminino ilustrado • Reações de demonstração • Voz em português</p>
 </main>
 <script src="/socket.io/socket.io.js"></script><script src="/app.js"></script>
 </body></html>
