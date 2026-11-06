@@ -24,7 +24,7 @@ const seenGiftEvents = new Map();
 let totals = { likes: 0, comments: 0, gifts: 0, followers: 0, shares: 0, viewers: 0 };
 
 const clean = (value, fallback = "amigo") =>
-  String(value || fallback).replace(/[^\\p{L}\\p{N}_ -]/gu, "").trim().slice(0, 22) || fallback;
+  String(value || fallback).replace(/[^\p{L}\p{N}_ -]/gu, "").trim().slice(0, 22) || fallback;
 
 function emitReaction(type, message, extra = {}) {
   io.emit("character-reaction", { type, message, ...extra, at: Date.now() });
@@ -32,13 +32,13 @@ function emitReaction(type, message, extra = {}) {
 function emitStats() { io.emit("live-stats", { ...totals }); }
 
 function localReply(comment, nickname) {
-  const text = String(comment || "").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+  const text = String(comment || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const name = clean(nickname);
-  if (/\\b(oi|ola|opa|eai|bom dia|boa tarde|boa noite)\\b/.test(text)) return `Oii, ${name}! Que bom ter você aqui com a gente! 💜`;
-  if (/\\b(nome|quem e voce|quem e vc)\\b/.test(text)) return "Eu sou a Pixel Girl, sua anfitriã virtual! ✨";
-  if (/\\b(linda|bonita|fofa|perfeita|gata)\\b/.test(text)) return `Aaaah, obrigada pelo carinho, ${name}! 💖`;
-  if (/\\b(danca|dancar)\\b/.test(text)) return `Bora dançar, ${name}! Manda uma música pra mim! 💃`;
-  if (/\\b(te amo|amor)\\b/.test(text)) return `Um abraço virtual pra você, ${name}! 💜`;
+  if (/\b(oi|ola|opa|eai|bom dia|boa tarde|boa noite)\b/.test(text)) return `Oii, ${name}! Que bom ter você aqui com a gente! 💜`;
+  if (/\b(nome|quem e voce|quem e vc)\b/.test(text)) return "Eu sou a Pixel Girl, sua anfitriã virtual! ✨";
+  if (/\b(linda|bonita|fofa|perfeita|gata)\b/.test(text)) return `Aaaah, obrigada pelo carinho, ${name}! 💖`;
+  if (/\b(danca|dancar)\b/.test(text)) return `Bora dançar, ${name}! Manda uma música pra mim! 💃`;
+  if (/\b(te amo|amor)\b/.test(text)) return `Um abraço virtual pra você, ${name}! 💜`;
   if (text.includes("?")) return `Boa pergunta, ${name}! Gostei de você perguntar! 💗`;
   return `Eu vi seu comentário, ${name}! Obrigada por participar da live! 💗`;
 }
