@@ -32,3 +32,12 @@ body:before{background:#e83db9;top:-150px;left:-120px}body:after{background:#6b5
 .character.react-like{animation:bounce .65s ease}.character.react-gift{animation:celebrate .95s ease}.character.react-gift .arms .right{animation:wave .45s ease 2}
 @keyframes bounce{0%,100%{transform:translateY(0)}35%{transform:translateY(-25px)}70%{transform:translateY(0)}}@keyframes celebrate{0%,100%{transform:scale(1)}30%{transform:scale(1.08) rotate(-6deg)}65%{transform:scale(1.07) rotate(6deg)}}@keyframes wave{0%,100%{transform:rotate(-17deg)}50%{transform:rotate(-72deg)}}@keyframes talk{from{transform:scaleY(.4)}to{transform:scaleY(1)}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
 @media(max-width:600px){.scene{padding-top:68px}.stage{transform:scale(.82);margin:-30px 0}.bubble{right:-5px;top:10px;width:168px;font-size:12px}.controls{margin-top:-22px}.character-wrap{width:300px}}
+
+/* Atualização: ilustração feminina e seletor de voz */
+.character{width:300px;height:440px;filter:drop-shadow(0 12px 24px #08051d99)}
+.character-art{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;image-rendering:auto}
+.mouth{position:absolute;z-index:8;top:34%;left:48%;width:20px;height:9px;border-radius:0 0 12px 12px;background:#a33b79;border:2px solid #28142f;opacity:.75;pointer-events:none}
+.mouth.talking{height:20px;animation:talk .13s infinite alternate}
+.voice-picker{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #b77aff;border-radius:24px;background:#21163f;color:#f8eaff;font-size:12px;font-weight:700}
+.voice-picker select{max-width:240px;border:0;outline:0;background:#38205d;color:#fff;border-radius:12px;padding:7px;font-size:12px}
+@media(max-width:600px){.character{width:270px;height:410px}.voice-picker{width:100%;justify-content:center}.voice-picker select{max-width:65%}}
