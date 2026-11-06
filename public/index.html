@@ -10,22 +10,30 @@
   <main class="scene">
     <div class="status"><span class="dot"></span> PERSONAGEM ONLINE</div>
     <section class="character-wrap">
-      <div id="character" class="character" aria-label="Personagem mascote">
+      <div id="character" class="character" aria-label="Personagem virtual">
+        <div class="hair"></div>
         <div class="ears"><i></i><i></i></div>
+        <div class="arm arm-left"><i class="hand"></i></div>
+        <div class="arm arm-right"><i class="hand"></i></div>
+        <div class="legs"><i></i><i></i></div>
+        <div class="shoes"><i></i><i></i></div>
         <div class="face">
+          <div class="eyebrows"><i></i><i></i></div>
           <div class="eyes"><i></i><i></i></div>
           <div class="cheeks"><i></i><i></i></div>
-          <div class="mouth"></div>
+          <div class="mouth" id="mouth"></div>
         </div>
-        <div class="body"></div>
+        <div class="neck"></div>
+        <div class="body"><span class="shirt-mark">★</span></div>
       </div>
-      <div id="bubble" class="bubble">Oi! Estou esperando as curtidas e os presentes! 👋</div>
+      <div id="bubble" class="bubble" aria-live="polite">Oi, pessoal! Estou pronto para a nossa live! 👋</div>
     </section>
     <section class="controls">
       <button id="likeBtn">❤️ Testar curtida</button>
       <button id="giftBtn">🎁 Testar presente</button>
+      <button id="voiceBtn" class="voice-button" aria-pressed="true">🔊 Voz ativada</button>
     </section>
-    <p class="hint">Modo de demonstração • Os botões simulam eventos para testar as animações.</p>
+    <p class="hint">Demonstração: os botões simulam eventos. A voz usa a fala do navegador.</p>
   </main>
   <script src="/socket.io/socket.io.js"></script>
   <script src="/app.js"></script>
