@@ -1,9 +1,9 @@
-require("dotenv").config();
+const path=require("path");
+require("dotenv").config({path:path.join(__dirname,".env")});
 const express=require("express");
 const http=require("http");
 const {Server}=require("socket.io");
 const {TikTokLiveConnection}=require("tiktok-live-connector");
-const path=require("path");
 const app=express(),server=http.createServer(app),io=new Server(server);
 const PORT=process.env.PORT||3000;
 app.use(express.json({limit:"12kb"}));
