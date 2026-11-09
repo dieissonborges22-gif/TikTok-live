@@ -1,29 +1,35 @@
-# Live 3D V2 — Cartesia + Ollama
+# CR7 Virtual LIVE — V2
 
-Nova versão separada da aplicação original.
+Versão de desenvolvimento separada do app original. O personagem é um avatar virtual de fã inspirado no universo de Cristiano Ronaldo; não representa nem fala em nome do jogador real.
 
 ## Requisitos
 - Node.js 20 ou superior.
-- Dependências já declaradas no `package.json` da raiz do repositório.
-- Ollama instalado e executando no computador/servidor que hospeda esta aplicação.
-- Modelo Ollama baixado: `ollama pull gemma4:e4b`.
-- Chave Cartesia e um ID de voz habilitado na conta.
+- Dependências da raiz do repositório instaladas (`npm install`).
+- Ollama ativo e acessível pelo servidor; modelo `gemma4:e4b` instalado.
+- Chave Cartesia e Voice ID de uma voz masculina disponível na sua conta.
 
-## Iniciar
-Na raiz do repositório:
-1. Instale as dependências: `npm install`.
-2. Copie `live3d-v2/.env.example` para `live3d-v2/.env`.
-3. Preencha `CARTESIA_API_KEY` no arquivo privado `.env`.
-4. Confira `OLLAMA_URL`, `OLLAMA_MODEL` e `CARTESIA_VOICE_ID`.
-5. Inicie com `node live3d-v2/server.js`.
+## Configurar e iniciar
+1. Copie `.env.example` para `.env` dentro de `live3d-v2`.
+2. Preencha `CARTESIA_API_KEY` e `CARTESIA_VOICE_ID` com uma voz masculina da sua conta.
+3. Confirme `OLLAMA_URL` e `OLLAMA_MODEL`.
+4. Na raiz do repositório, execute `npm install`.
+5. Execute `node live3d-v2/server.js`.
 6. Abra `http://localhost:3000`.
 
 ## OBS
-Adicione `http://localhost:3000` como Fonte de Navegador. Se o OBS estiver em outro computador, use o endereço de rede do computador que está executando o servidor.
+Adicione a URL do painel como Fonte de Navegador. Se OBS e servidor estiverem em computadores diferentes, use o endereço de rede do computador servidor.
 
-## Importante
-- Nunca envie o arquivo `.env` ao GitHub. Ele contém a chave privada da Cartesia.
-- O endereço `127.0.0.1:11434` aponta para o próprio computador do servidor. Em hospedagem remota, configure uma URL de Ollama que o servidor consiga acessar com segurança.
-- O uso da Cartesia pode consumir créditos ou ser cobrado conforme o plano da conta.
-- A conexão TikTok usa biblioteca não oficial e pode sofrer alterações quando o TikTok mudar seu protocolo.
-- O avatar nesta versão é uma representação 2D inicial. A estrutura está preparada para evoluir para um avatar 3D com animações e lip-sync.
+## Recursos desta versão
+- Respostas aos comentários com Ollama.
+- Voz sintetizada pela Cartesia.
+- Reações a comentários, presentes, curtidas em lotes e entrada de espectadores.
+- Animação de comemoração “SIUUU” para presentes.
+- Painel para testar IA, voz e reação.
+
+## Limitações
+- O avatar atual é uma ilustração CSS 2D animada, ainda não é um modelo 3D real nem captura facial avançada.
+- A sincronização de boca nesta etapa é uma animação simples durante o áudio.
+- A integração TikTok depende de uma biblioteca não oficial e pode mudar com o protocolo do TikTok.
+- O endereço localhost do Ollama só funciona se o Ollama estiver no mesmo computador/ambiente de rede do servidor.
+- Cartesia pode consumir créditos conforme o plano da conta.
+- Nunca publique o arquivo `.env` nem compartilhe a chave Cartesia.
