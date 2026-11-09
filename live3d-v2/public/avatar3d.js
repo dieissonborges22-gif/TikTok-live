@@ -81,7 +81,7 @@ if(canvas){
  if(celebrate){const p=(now-(celebratingUntil-1600))/1600;root.position.y+=Math.sin(p*Math.PI)*.55;armL.rotation.z=-1.8;armR.rotation.z=1.8;armL.rotation.x=-.4;armR.rotation.x=-.4;}
  else{armL.rotation.z=THREE.MathUtils.lerp(armL.rotation.z,0,.08);armR.rotation.z=THREE.MathUtils.lerp(armR.rotation.z,0,.08);armL.rotation.x=THREE.MathUtils.lerp(armL.rotation.x,0,.08);armR.rotation.x=THREE.MathUtils.lerp(armR.rotation.x,0,.08);}
  if(like)root.position.y+=Math.abs(Math.sin(now*.018))*.22;
- mouth.scale.y=talking?.13+Math.abs(Math.sin(now*.025))*.18:.025;
+ mouth.scale.y=talking ? .13+Math.abs(Math.sin(now*.025))*.18 : .025;
  head.rotation.y=Math.sin(t*.7)*.045;head.rotation.x=Math.sin(t*.9)*.025;
  renderer.render(scene,camera);}
  animate();
