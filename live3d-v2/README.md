@@ -19,7 +19,7 @@ Versão de desenvolvimento separada do app original. O personagem é um avatar v
 ## OBS
 Adicione a URL do painel como Fonte de Navegador. Se OBS e servidor estiverem em computadores diferentes, use o endereço de rede do computador servidor.
 
-## Recursos desta versão
+## Recursos desta versão\n- Avatar 3D procedural via Three.js, carregado pelo navegador a partir de CDN.
 - Respostas aos comentários com Ollama.
 - Voz sintetizada pela Cartesia.
 - Reações a comentários, presentes, curtidas em lotes e entrada de espectadores.
@@ -27,8 +27,8 @@ Adicione a URL do painel como Fonte de Navegador. Se OBS e servidor estiverem em
 - Painel para testar IA, voz e reação.
 
 ## Limitações
-- O avatar atual é uma ilustração CSS 2D animada, ainda não é um modelo 3D real nem captura facial avançada.
-- A sincronização de boca nesta etapa é uma animação simples durante o áudio.
+- O avatar agora é renderizado em 3D em tempo real com Three.js e geometria procedural, com rotação por arraste, animação de fala e comemoração. É um personagem 3D estilizado inspirado no futebol, não um modelo fotorealista nem uma reprodução exata do rosto do atleta.
+- A sincronização da boca é uma animação aproximada durante a reprodução do áudio; não é captura fonema a fonema.
 - A integração TikTok depende de uma biblioteca não oficial e pode mudar com o protocolo do TikTok.
 - O endereço localhost do Ollama só funciona se o Ollama estiver no mesmo computador/ambiente de rede do servidor.
 - Cartesia pode consumir créditos conforme o plano da conta.
