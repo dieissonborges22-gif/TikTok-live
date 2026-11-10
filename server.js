@@ -25,7 +25,14 @@ let currentUsername = "";
 let connecting = false;
 let autoReply = false;
 let aiEnabled = false;
-let personality = "Você é uma streamer virtual brasileira, divertida, simpática, espontânea e respeitosa.";
+let personality = "Você é a Luna, uma streamer virtual brasileira, divertida, simpática, espontânea e respeitosa. Responda como uma pessoa conversando ao vivo, sem fingir ser humana.";
+let streamTopic = "conversa e entretenimento";
+let forbiddenTopics = "dados pessoais, política partidária, conteúdo sexual, violência e pedidos de dinheiro";
+let replyMode = "smart";
+let lastChatAt = Date.now();
+let lastQuietPromptAt = 0;
+const pendingComments = [];
+const answeredIds = new Set();
 let voiceConfig = { voiceName: "", rate: 1, volume: 0.9, enabled: true };
 let totals = { likes: 0, comments: 0, gifts: 0, followers: 0, shares: 0, viewers: 0 };
 let lastLikeReactionAt = 0;
@@ -92,7 +99,7 @@ async function handleChat(event) {
   io.emit("chat-comment", { nickname, comment, userId: String(event.user?.id || "") });
   if (!autoReply) return;
 
-  const userKey = String(event.user?.id || event.user?.displayId || nickname).toLowerCase();
+  if (forbiddenTopics && normalize(forbiddenTopics).split(",").some(topic => topic.trim() && normalize(comment).includes(topic.trim()))) return;\n  const userKey = String(event.user?.id || event.user?.displayId || nickname).toLowerCase();
   const now = Date.now();
   if (now - (userReplyAt.get(userKey) || 0) < 25000 || now - lastGlobalReplyAt < 3800) return;
   userReplyAt.set(userKey, now);
@@ -100,7 +107,7 @@ async function handleChat(event) {
 
   const fallback = instantReply(comment, nickname);
   const answer = await askGemini(comment, nickname) || fallback;
-  react("chat", answer, { nickname, comment, source: aiEnabled && process.env.GEMINI_API_KEY ? "gemini-or-local" : "local" });
+  answeredIds.add(commentId);\n  react("chat", answer, { nickname, comment, commentId, source: aiEnabled && process.env.GEMINI_API_KEY ? "gemini-or-local" : "local" });
   if (userReplyAt.size > 1500) {
     const cutoff = Date.now() - 15 * 60 * 1000;
     for (const [key, at] of userReplyAt) if (at < cutoff) userReplyAt.delete(key);
@@ -191,7 +198,7 @@ async function disconnectLive() {
 io.on("connection", socket => {
   socket.emit("live-status", { connected: Boolean(connection), connecting, username: currentUsername });
   socket.emit("live-stats", { ...totals });
-  socket.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality });
+  socket.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality, streamTopic, forbiddenTopics, replyMode });
   socket.emit("voice-config", voiceConfig);
 
   socket.on("connect-live", async rawName => {
@@ -227,7 +234,7 @@ io.on("connection", socket => {
   socket.on("disconnect-live", () => { void disconnectLive(); });
   socket.on("toggle-auto-reply", value => {
     autoReply = Boolean(value);
-    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality });
+    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality, streamTopic, forbiddenTopics, replyMode });
   });
   socket.on("toggle-ai", value => {
     aiEnabled = Boolean(value) && Boolean(process.env.GEMINI_API_KEY);
@@ -236,6 +243,26 @@ io.on("connection", socket => {
   socket.on("set-personality", value => {
     personality = cleanText(value, 420) || personality;
     io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality });
+  });
+  socket.on("host-settings", value => {
+    streamTopic = cleanText(value?.streamTopic, 180) || "conversa e entretenimento";
+    forbiddenTopics = cleanText(value?.forbiddenTopics, 260);
+    replyMode = value?.replyMode === "all" ? "all" : "smart";
+    personality = cleanText(value?.personality, 420) || personality;
+    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality, streamTopic, forbiddenTopics, replyMode });
+  });
+  socket.on("answer-comment", async id => {
+    const item = pendingComments.find(entry => entry.id === String(id));
+    if (!item) return;
+    const answer = await askGemini(item.comment, item.nickname) || instantReply(item.comment, item.nickname);
+    answeredIds.add(item.id);
+    react("chat", answer, { nickname: item.nickname, comment: item.comment, commentId: item.id, source: "manual" });
+  });
+  socket.on("host-topic", async topic => {
+    const safeTopic = cleanText(topic, 180);
+    if (!safeTopic) return;
+    const answer = await askGemini("Fale para o chat sobre: " + safeTopic, "Chat") || "Pessoal, vamos conversar sobre " + safeTopic + "! O que vocês acham? Quero ler as opiniões de vocês! 💜";
+    react("chat", answer, { source: "host-topic" });
   });
   socket.on("voice-config", value => {
     voiceConfig = {
@@ -267,6 +294,14 @@ io.on("connection", socket => {
     emitStats();
   });
 });
+
+setInterval(() => {
+  if (!autoReply || !connection || Date.now() - lastChatAt < 90000 || Date.now() - lastQuietPromptAt < 180000) return;
+  lastQuietPromptAt = Date.now();
+  const prompts = ["Chat, quero conhecer vocês! De onde estão assistindo? 💜","Vamos movimentar a conversa: qual música não pode faltar numa live? 🎶","Me contem uma coisa boa que aconteceu com vocês hoje! ✨"];
+  const prompt = prompts[Math.floor(Math.random() * prompts.length)];
+  react("chat", prompt, { source: "quiet-chat" });
+}, 15000);
 
 httpServer.listen(PORT, HOST, () => console.log(`Pixel LIVE Studio: http://${HOST}:${PORT} | OBS overlay: http://${HOST}:${PORT}/overlay`));
 process.once("SIGINT", () => { void disconnectLive(); httpServer.close(); });
