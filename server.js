@@ -240,8 +240,8 @@ io.on("connection", socket => {
   socket.on("voice-config", value => {
     voiceConfig = {
       voiceName: cleanText(value?.voiceName, 120),
-      rate: Math.min(1.15, Math.max(0.82, Number(value?.rate) || 1)),
-      volume: Math.min(1, Math.max(0, Number(value?.volume) || 0.9)),
+      rate: Number.isFinite(Number(value?.rate)) ? Math.min(1.15, Math.max(0.82, Number(value.rate))) : 1,
+      volume: Number.isFinite(Number(value?.volume)) ? Math.min(1, Math.max(0, Number(value.volume))) : 0.9,
       enabled: value?.enabled !== false
     };
     io.emit("voice-config", voiceConfig);
