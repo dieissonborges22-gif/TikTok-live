@@ -16,6 +16,8 @@ jobs:
       - run: npm run check
       - run: node --check public/app.js
       - run: node --check public/overlay.js
+      - name: Check TikTok connector event names
+        run: node --input-type=module -e "import { WebcastEvent, ControlEvent } from 'tiktok-live-connector'; for (const key of ['CHAT','GIFT','LIKE','MEMBER','FOLLOW','SHARE','ROOM_USER','QUESTION_NEW']) if (!WebcastEvent[key]) throw new Error('Missing WebcastEvent.' + key); for (const key of ['ERROR','DISCONNECTED']) if (!ControlEvent[key]) throw new Error('Missing ControlEvent.' + key); console.log('TikTok connector event map OK')"
       - name: Check Three.js avatar geometry
         run: node --input-type=module -e "import * as THREE from 'three'; if (!THREE.CapsuleGeometry) process.exit(1); console.log('Three.js', THREE.REVISION)"
       - name: Smoke test local server and OBS overlay
