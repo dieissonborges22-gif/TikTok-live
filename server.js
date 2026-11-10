@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import http from "node:http";
 import { Server } from "socket.io";
+import { fileURLToPath } from "node:url";
 import { TikTokLiveConnection, WebcastEvent, ControlEvent } from "tiktok-live-connector";
 
 const app = express();
@@ -14,7 +15,8 @@ app.disable("x-powered-by");
 app.use(express.json({ limit: "12kb" }));
 app.use(express.static("public", { extensions: ["html"] }));
 app.get("/health", (_req, res) => res.json({ ok: true, app: "Pixel LIVE Studio", version: "1.0.0", connected: Boolean(connection) }));
-app.get("/overlay", (_req, res) => res.sendFile(new URL("./public/overlay.html", import.meta.url).pathname));
+const overlayFile = fileURLToPath(new URL("./public/overlay.html", import.meta.url));
+app.get("/overlay", (_req, res) => res.sendFile(overlayFile));
 
 let connection = null;
 let currentUsername = "";
