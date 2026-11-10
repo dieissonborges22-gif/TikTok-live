@@ -32,7 +32,6 @@ let replyMode = "smart";
 let lastChatAt = Date.now();
 let lastQuietPromptAt = 0;
 const pendingComments = [];
-const answeredIds = new Set();
 let voiceConfig = { voiceName: "", rate: 1, volume: 0.9, enabled: true };
 let totals = { likes: 0, comments: 0, gifts: 0, followers: 0, shares: 0, viewers: 0 };
 let lastLikeReactionAt = 0;
@@ -113,7 +112,6 @@ async function handleChat(event) {
   const shouldAnswer = replyMode === "all" || /\?|\b(oi|ola|bom dia|boa tarde|boa noite|quem|como|qual|porque|por que|quando|onde)\b/i.test(comment);
   if (!shouldAnswer) return;
   const answer = (await askGemini(comment, nickname)) || instantReply(comment, nickname);
-  answeredIds.add(commentId);
   react("chat", answer, { nickname, comment, commentId, source: aiEnabled && process.env.GEMINI_API_KEY ? "gemini-or-local" : "local" });
 }
 function attachEvents(conn) {
@@ -257,7 +255,6 @@ io.on("connection", socket => {
     const item = pendingComments.find(entry => entry.id === String(id));
     if (!item) return;
     const answer = await askGemini(item.comment, item.nickname) || instantReply(item.comment, item.nickname);
-    answeredIds.add(item.id);
     react("chat", answer, { nickname: item.nickname, comment: item.comment, commentId: item.id, source: "manual" });
   });
   socket.on("host-topic", async topic => {
