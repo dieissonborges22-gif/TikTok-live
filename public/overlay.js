@@ -11,12 +11,13 @@ let mouthTarget=0,mouthValue=0;
 const clock=new THREE.Clock();
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(31,1,.1,100);
-camera.position.set(0,2.35,8.8);
+camera.position.set(0,2.45,8.2);
 camera.lookAt(0,2.35,0);
 let renderer;
 try{
  renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:"low-power"});
  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));
+ renderer.setClearColor(0x000000,0);
  renderer.setSize(mount.clientWidth,mount.clientHeight);
  renderer.outputColorSpace=THREE.SRGBColorSpace;
  renderer.toneMapping=THREE.ACESFilmicToneMapping;
@@ -34,7 +35,8 @@ const skin=mat(0xc98770,.82),skinLight=mat(0xe0a087,.78),hair=mat(0x40204f,.34),
 function mesh(geometry,material,parent,x=0,y=0,z=0,sx=1,sy=1,sz=1){const m=new THREE.Mesh(geometry,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
 function sphere(parent,material,pos,scale){return mesh(new THREE.SphereGeometry(1,24,18),material,parent,...pos,...scale);}
 function cylinder(parent,material,pos,r1,r2,h,segments=16){return mesh(new THREE.CylinderGeometry(r1,r2,h,segments),material,parent,...pos);}
-const avatar=new THREE.Group();scene.add(avatar);
+const avatar=new THREE.Group();avatar.scale.setScalar(.9);scene.add(avatar);
+const eyeWhites=[];
 const hips=new THREE.Group();hips.position.y=1.45;avatar.add(hips);
 // legs and shoes
 for(const side of [-1,1]){
@@ -90,7 +92,7 @@ for(const side of [-1,1]){
 const band=mesh(new THREE.TorusGeometry(.72,.075,10,40,Math.PI),lavender,headRig,0,.68,-.12);band.rotation.z=Math.PI;
 // face details
 for(const side of [-1,1]){
- sphere(headRig,white,[side*.27,.49,.52],[.17,.21,.08]);
+ eyeWhites.push(sphere(headRig,white,[side*.27,.49,.52],[.17,.21,.08]));
  sphere(headRig,iris,[side*.27,.47,.59],[.095,.14,.045]);
  sphere(headRig,black,[side*.27,.47,.625],[.047,.085,.025]);
  sphere(headRig,white,[side*.30,.54,.65],[.035,.04,.02]);
@@ -165,7 +167,7 @@ function animate(now){
  mouthInside.scale.y=.008+mouthValue*.04;
  if(now>nextBlink){blink=.15;nextBlink=now+2200+Math.random()*3200;}
  blink=Math.max(0,blink-dt*5);
- headRig.children.forEach(o=>{if(o.userData.eyeWhite){o.scale.y=1-blink;}});
+ eyeWhites.forEach(eye=>{eye.scale.y=.21*(1-blink);});
  renderer.render(scene,camera);
 }
 requestAnimationFrame(animate);
