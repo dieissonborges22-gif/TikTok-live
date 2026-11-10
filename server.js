@@ -110,8 +110,9 @@ async function handleChat(event) {
   if (now - (userReplyAt.get(userKey) || 0) < 25000 || now - lastGlobalReplyAt < 3800) return;
   userReplyAt.set(userKey, now);
   lastGlobalReplyAt = now;
-  const shouldAnswer = replyMode === "all" || /\\?|\\b(oi|ola|bom dia|boa tarde|boa noite|quem|como|qual|porque|por que|quando|onde)\\b/i.test(comment);
-  const answer = (shouldAnswer ? await askGemini(comment, nickname) : null) || instantReply(comment, nickname);
+  const shouldAnswer = replyMode === "all" || /\?|\b(oi|ola|bom dia|boa tarde|boa noite|quem|como|qual|porque|por que|quando|onde)\b/i.test(comment);
+  if (!shouldAnswer) return;
+  const answer = (await askGemini(comment, nickname)) || instantReply(comment, nickname);
   answeredIds.add(commentId);
   react("chat", answer, { nickname, comment, commentId, source: aiEnabled && process.env.GEMINI_API_KEY ? "gemini-or-local" : "local" });
 }
