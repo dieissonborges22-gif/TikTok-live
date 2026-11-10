@@ -94,26 +94,27 @@ async function handleChat(event) {
   const nickname = safeName(event.user);
   const comment = cleanText(event.content, 260);
   if (!comment) return;
+  lastChatAt = Date.now();
   totals.comments++;
   emitStats();
-  io.emit("chat-comment", { nickname, comment, userId: String(event.user?.id || "") });
+  const commentId = String(event.msgId || `${event.user?.id || nickname}:${Date.now()}`);
+  const item = { id: commentId, nickname, comment, userId: String(event.user?.id || "") };
+  io.emit("chat-comment", item);
+  pendingComments.push(item);
+  if (pendingComments.length > 80) pendingComments.shift();
   if (!autoReply) return;
-
-  if (forbiddenTopics && normalize(forbiddenTopics).split(",").some(topic => topic.trim() && normalize(comment).includes(topic.trim()))) return;\n  const userKey = String(event.user?.id || event.user?.displayId || nickname).toLowerCase();
+  const normalizedComment = normalize(comment);
+  if (forbiddenTopics && normalize(forbiddenTopics).split(",").some(topic => topic.trim() && normalizedComment.includes(topic.trim()))) return;
+  const userKey = String(event.user?.id || event.user?.displayId || nickname).toLowerCase();
   const now = Date.now();
   if (now - (userReplyAt.get(userKey) || 0) < 25000 || now - lastGlobalReplyAt < 3800) return;
   userReplyAt.set(userKey, now);
   lastGlobalReplyAt = now;
-
-  const fallback = instantReply(comment, nickname);
-  const answer = await askGemini(comment, nickname) || fallback;
-  answeredIds.add(commentId);\n  react("chat", answer, { nickname, comment, commentId, source: aiEnabled && process.env.GEMINI_API_KEY ? "gemini-or-local" : "local" });
-  if (userReplyAt.size > 1500) {
-    const cutoff = Date.now() - 15 * 60 * 1000;
-    for (const [key, at] of userReplyAt) if (at < cutoff) userReplyAt.delete(key);
-  }
+  const shouldAnswer = replyMode === "all" || /\\?|\\b(oi|ola|bom dia|boa tarde|boa noite|quem|como|qual|porque|por que|quando|onde)\\b/i.test(comment);
+  const answer = (shouldAnswer ? await askGemini(comment, nickname) : null) || instantReply(comment, nickname);
+  answeredIds.add(commentId);
+  react("chat", answer, { nickname, comment, commentId, source: aiEnabled && process.env.GEMINI_API_KEY ? "gemini-or-local" : "local" });
 }
-
 function attachEvents(conn) {
   conn.on(WebcastEvent.CHAT, handleChat);
   conn.on(WebcastEvent.LIKE, event => {
@@ -238,7 +239,7 @@ io.on("connection", socket => {
   });
   socket.on("toggle-ai", value => {
     aiEnabled = Boolean(value) && Boolean(process.env.GEMINI_API_KEY);
-    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality });
+    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality, streamTopic, forbiddenTopics, replyMode });
   });
   socket.on("set-personality", value => {
     personality = cleanText(value, 420) || personality;
@@ -262,6 +263,26 @@ io.on("connection", socket => {
     const safeTopic = cleanText(topic, 180);
     if (!safeTopic) return;
     const answer = await askGemini("Fale para o chat sobre: " + safeTopic, "Chat") || "Pessoal, vamos conversar sobre " + safeTopic + "! O que vocês acham? Quero ler as opiniões de vocês! 💜";
+    react("chat", answer, { source: "host-topic" });
+  });
+  socket.on("host-settings", value => {
+    streamTopic = cleanText(value?.streamTopic, 180) || "conversa e entretenimento";
+    forbiddenTopics = cleanText(value?.forbiddenTopics, 260);
+    replyMode = value?.replyMode === "all" ? "all" : "smart";
+    personality = cleanText(value?.personality, 420) || personality;
+    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality, streamTopic, forbiddenTopics, replyMode });
+  });
+  socket.on("answer-comment", async id => {
+    const item = pendingComments.find(entry => entry.id === String(id));
+    if (!item) return;
+    const answer = await askGemini(item.comment, item.nickname) || instantReply(item.comment, item.nickname);
+    answeredIds.add(item.id);
+    react("chat", answer, { nickname: item.nickname, comment: item.comment, commentId: item.id, source: "manual" });
+  });
+  socket.on("host-topic", async topic => {
+    const safeTopic = cleanText(topic, 180);
+    if (!safeTopic) return;
+    const answer = await askGemini("Converse com o chat sobre: " + safeTopic, "Chat") || "Pessoal, vamos conversar sobre " + safeTopic + "! O que vocês acham? Quero ler as opiniões de vocês! 💜";
     react("chat", answer, { source: "host-topic" });
   });
   socket.on("voice-config", value => {
