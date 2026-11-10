@@ -8,7 +8,10 @@ Aplicativo local para lives do TikTok com personagem 3D próprio, respostas auto
 - **Animações:** respiração, movimento de cabeça, piscadas, fala, reações a curtidas, presentes, entradas, follows e compartilhamentos.
 - **Boca animada:** movimento sincronizado com a fala sintetizada do navegador.
 - **TikTok LIVE:** integração com `tiktok-live-connector 2.5.x`, usando o formato atual de eventos e campos aninhados.
-- **Host configurável:** nome/persona, tema da live, assuntos a evitar e modo inteligente ou resposta a todos os comentários.\n- **Fila do chat:** botão para escolher e priorizar manualmente qualquer comentário recente.\n- **Puxar assunto:** comando para a personagem iniciar uma conversa quando você quiser.\n- **Respostas locais:** regras em português sem chave ou custo por chamada; Gemini opcional para respostas realmente generativas.
+- **Host configurável:** nome/persona, tema da live, assuntos a evitar e modo inteligente ou resposta a todos os comentários.
+- **Fila do chat:** botão para escolher e priorizar manualmente qualquer comentário recente.
+- **Puxar assunto:** comando para a personagem iniciar uma conversa quando você quiser.
+- **Respostas locais:** regras em português sem chave ou custo por chamada; Gemini opcional para respostas realmente generativas.
 - **Controles:** personalidade editável, voz, velocidade, volume, testes de eventos, métricas e chat recente.
 - **OBS:** página limpa e transparente em `http://127.0.0.1:3000/overlay`.
 
@@ -24,11 +27,14 @@ Aplicativo local para lives do TikTok com personagem 3D próprio, respostas auto
 1. Instale Node.js 20 LTS ou superior.
 2. Baixe o ZIP da branch `feature/ai-host-free-local` pelo GitHub e extraia.
 3. Abra o Prompt de Comando ou PowerShell dentro da pasta extraída.
-4. Instale as dependências:
+4. Instale Node.js 22 LTS (recomendado) e reinicie o terminal.
+5. Instale as dependências:
 
 ```powershell
-npm install
+npm install --no-audit --no-fund
 ```
+
+O `.npmrc` já configura novas tentativas e timeout maior para downloads. Se o Windows mostrar `EPERM`, feche OBS, VS Code e terminais que estejam usando a pasta; encerre `node.exe` no Gerenciador de Tarefas e tente novamente. Se continuar `ERR_SSL_CIPHER_OPERATION_FAILED`, reinicie o PC, confira data/hora e teste outra rede. Não desative a validação SSL do npm.
 
 6. Opcional: copie `.env.example` para `.env` e informe sua chave Gemini.
 7. Inicie o aplicativo:
