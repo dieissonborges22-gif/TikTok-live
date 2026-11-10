@@ -1,81 +1,99 @@
-# TikTok LIVE Studio
+# Pixel LIVE Studio — versão 1.0
 
-Aplicativo próprio de personagem virtual para interagir com uma LIVE do TikTok. O projeto usa Node.js, Socket.IO e a biblioteca comunitária `tiktok-live-connector`.
+Aplicativo local para lives do TikTok com personagem 3D próprio, respostas automáticas, voz e overlay transparente para OBS.
 
-## Recursos desta versão
+## O que esta versão entrega
 
-- Conexão a uma LIVE pública pelo @ do criador (não informe senha).
-- Recepção de comentários, curtidas, presentes, entradas, follows, compartilhamentos e contagem de espectadores, conforme os eventos disponibilizados pelo conector.
-- Respostas automáticas a comentários com intervalo de segurança por usuário e limite global.
-- Respostas locais gratuitas quando a IA não está configurada ou falha.
-- Integração opcional com Google Gemini por variável de ambiente.
-- Voz do navegador/Windows via Speech Synthesis, com seleção de voz em português quando disponível.
-- Painel com métricas, chat recente e botões de simulação.
-- Página utilizável como fonte de navegador no OBS: `http://localhost:3000`.
+- **Avatar 3D autoral:** personagem feminina estilizada, construído em tempo real com Three.js (malhas, materiais, iluminação e animações; não é um vídeo nem uma imagem 2D).
+- **Animações:** respiração, movimento de cabeça, piscadas, fala, reações a curtidas, presentes, entradas, follows e compartilhamentos.
+- **Boca animada:** movimento sincronizado com a fala sintetizada do navegador.
+- **TikTok LIVE:** integração com `tiktok-live-connector 2.5.x`, usando o formato atual de eventos e campos aninhados.
+- **Respostas automáticas:** respostas locais imediatas, em português, sem chave de IA; opção Gemini para respostas mais específicas.
+- **Controles:** personalidade editável, voz, velocidade, volume, testes de eventos, métricas e chat recente.
+- **OBS:** página limpa e transparente em `http://127.0.0.1:3000/overlay`.
 
 ## Requisitos
 
-- Windows 10/11, Linux ou macOS.
-- Node.js 20 ou superior.
-- Conexão com a internet para receber eventos do TikTok.
-- Navegador com Speech Synthesis e voz instalada para áudio local.
+- Windows 10/11 (ou Linux/macOS).
+- Node.js 20.18 ou superior.
+- Internet para receber eventos do TikTok e carregar Three.js do CDN.
+- Navegador Chromium/OBS com WebGL habilitado e voz em português instalada para melhor resultado de áudio.
 
-## Instalação
+## Instalação no Windows
 
-1. Instale o Node.js 20+.
-2. Baixe/clique em **Code → Download ZIP** neste repositório e extraia a pasta.
-3. Abra um terminal dentro da pasta do projeto.
-4. Execute:
+1. Instale Node.js 20 LTS ou superior.
+2. Baixe o ZIP desta branch pelo GitHub e extraia.
+3. Abra o Prompt de Comando ou PowerShell dentro da pasta extraída.
+4. Instale as dependências:
 
-```bash
+```powershell
 npm install
 ```
 
-5. (Opcional) Crie um arquivo `.env` na pasta do projeto e adicione sua chave Gemini. Sem chave, o modo de respostas locais continua funcionando.
-6. Inicie:
+5. Opcional: copie `.env.example` para `.env` e informe sua chave Gemini.
+6. Inicie o aplicativo:
 
-```bash
+```powershell
 npm start
 ```
 
-7. Abra `http://localhost:3000`.
-
-## Configurar IA opcional
-
-No arquivo `.env`:
-
-```env
-GEMINI_API_KEY=sua_chave_aqui
-GEMINI_MODEL=gemini-2.5-flash-lite
-PORT=3000
-```
-
-A chave fica somente no seu computador e não deve ser enviada ao GitHub. O uso gratuito de serviços externos pode ter cotas, limites e alterações de disponibilidade; por isso o modo local é o fallback.
+7. Abra no navegador: `http://127.0.0.1:3000`.
 
 ## Usar no OBS
 
-Adicione uma **Fonte de navegador** com o endereço `http://localhost:3000`. Para capturar áudio, habilite a opção de controle de áudio da fonte no OBS e confira o dispositivo de saída do navegador.
+1. Adicione uma **Fonte de navegador**.
+2. Endereço: `http://127.0.0.1:3000/overlay`.
+3. Resolução sugerida: 1920 × 1080.
+4. Marque a opção para controlar/ativar o áudio da fonte de navegador no OBS.
+5. Selecione uma voz brasileira no painel de controle. A disponibilidade de voz feminina depende das vozes instaladas no Windows/Chromium.
 
-## Testar sem estar ao vivo
+O painel de controle fica em `http://127.0.0.1:3000/`. O overlay é separado e não mostra botões nem métricas na transmissão.
 
-Use os botões **Testar curtida**, **Testar presente**, **Testar entrada** e **Enviar teste**. Eles verificam as reações e a voz sem conectar ao TikTok.
+## Conexão com o TikTok
+
+Digite somente o @ público da conta que está ao vivo. Não informe senha, cookies ou códigos. O conector lê eventos públicos e não envia mensagens ao chat.
+
+Eventos tratados: chat, curtidas, presentes (com encerramento de streak), entradas, seguidores, compartilhamentos, perguntas e espectadores, conforme o TikTok disponibilizar e o conector decodificar.
+
+## Respostas e IA
+
+- Sem configuração, o app usa respostas locais rápidas e não depende de API paga.
+- Gemini é opcional: crie `.env` com `GEMINI_API_KEY` e, se quiser, `GEMINI_MODEL=gemini-2.5-flash-lite`.
+- A chamada da IA tem timeout curto; se não responder a tempo, o app usa uma resposta local.
+- Serviços gratuitos de terceiros podem ter cotas, limites e mudanças. Não existe promessa de IA ilimitada.
+
+Exemplo de `.env`:
+
+```env
+PORT=3000
+HOST=127.0.0.1
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-2.5-flash-lite
+```
+
+## Testes
+
+- Execute `npm run check` para verificar a sintaxe do servidor.
+- No painel, teste curtida, presente, entrada, seguir, compartilhar e mensagem.
+- Confira `http://127.0.0.1:3000/health` para verificar se o servidor iniciou.
+- Teste primeiro em uma LIVE privada/de teste ou com uma transmissão pública controlada.
 
 ## Segurança e limitações
 
-- Informe apenas o @ público da conta. O aplicativo não pede senha, cookie ou código de autenticação.
-- O conector depende de uma interface não oficial do TikTok e pode parar de funcionar se a plataforma mudar seus protocolos.
-- Nem todo tipo de evento é entregue em todas as lives/contas; o painel mostra apenas o que o conector receber.
-- A voz do navegador é gratuita, mas a disponibilidade de vozes femininas em português depende das vozes instaladas no sistema.
-- O modo IA via Gemini é opcional e sujeito às cotas e regras do provedor.
-- Respostas automáticas são limitadas para evitar spam e repetição.
-- Antes de usar em uma live pública, teste com comentários e presentes simulados e ajuste o volume.
+- O servidor escuta em `127.0.0.1` por padrão, evitando expor o painel à rede local.
+- A conexão de leitura do TikTok usa um projeto comunitário não oficial. O TikTok pode alterar o protocolo e nem todo evento aparece em toda região ou LIVE.
+- A página 3D carrega Three.js pelo CDN jsDelivr; é necessária conexão à internet na primeira abertura.
+- A sincronização da boca é animada durante o áudio sintetizado; não é captura fonema a fonema de estúdio.
+- A qualidade e naturalidade da voz dependem do mecanismo de voz instalado no computador.
+- O avatar é um modelo 3D estilizado e procedural criado no código. Modelos 3D realistas personalizados exigem um arquivo VRM/GLB e licenças próprias.
+- O aplicativo não envia respostas escritas ao chat do TikTok; ele fala as respostas pelo avatar.
 
-## Próximas etapas planejadas
+## Tecnologias e referências
 
-1. Painel de personalidade e regras editáveis para cada evento.
-2. Fila de fala configurável e prioridade para presentes.
-3. Avatar 2D/3D próprio com animações de expressão, dança e sincronização labial por áudio.
-4. Controles de moderação e lista de palavras bloqueadas.
-5. Empacotamento para Windows.
+- Node.js + Express + Socket.IO.
+- TikTok LIVE Connector 2.5.x (eventos e payloads atuais).
+- Three.js para o personagem 3D e animações no navegador.
+- SpeechSynthesis para voz local.
+- Gemini opcional para respostas de IA.
 
-Este projeto é independente e não é afiliado ao TikTok.
+Projeto independente, sem afiliação ao TikTok/ByteDance.
