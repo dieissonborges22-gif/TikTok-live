@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pixel LIVE — Overlay</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent;font-family:Arial,sans-serif}
+#avatar{position:absolute;inset:0;width:100%;height:100%;background:transparent}
+#speech{position:absolute;top:7%;left:50%;transform:translateX(-50%) translateY(12px);max-width:min(88%,560px);padding:14px 22px;border:1px solid #f7a6e9;border-radius:20px;background:linear-gradient(135deg,rgba(255,250,255,.96),rgba(255,222,246,.94));box-shadow:0 8px 35px #14051e55,0 0 22px #ec70d855;color:#361a43;font-size:clamp(13px,2.3vw,20px);font-weight:700;text-align:center;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none}
+#speech.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#speech:after{content:"";position:absolute;left:50%;bottom:-8px;width:15px;height:15px;transform:translateX(-50%) rotate(45deg);background:#ffe4f7;border-right:1px solid #f7a6e9;border-bottom:1px solid #f7a6e9}
+#label{position:absolute;bottom:3%;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:4px;color:#fff;text-shadow:0 2px 8px #10051b;opacity:.7}
+#fallback{display:none;position:absolute;bottom:10%;left:50%;transform:translateX(-50%);color:white;font-size:14px}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"}}</script>
+</head><body><div id="avatar"></div><div id="speech" aria-live="polite">Oi, chat! Eu sou a Pixel! 💜</div><div id="label">PIXEL GIRL</div><div id="fallback">Ative o WebGL no navegador para ver o avatar 3D.</div>
+<script src="/socket.io/socket.io.js"></script><script type="module" src="/overlay.js"></script></body></html>
