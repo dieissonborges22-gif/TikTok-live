@@ -1,1 +1,68 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pixel LIVE Girl</title><link rel="stylesheet" href="/style.css"></head><body><main class="scene"><header class="status"><span class="dot"></span> PIXEL GIRL ONLINE <span class="live-tag">● LIVE</span></header><section class="stage"><div class="floating-heart h1">♥</div><div class="floating-heart h2">♥</div><div class="floating-heart h3">♥</div><div class="character-wrap"><div id="character" class="character"><img class="character-art" src="/avatar-girl.svg" alt="Avatar feminina gamer"><div id="mouth" class="mouth"></div></div></div><div id="bubble" class="bubble">Oii, chat! Eu sou a Pixel Girl! ✨</div></section><section class="controls"><button id="likeBtn">💗 Testar curtida</button><button id="giftBtn">🎁 Testar presente</button><button id="voiceBtn" class="voice-button">🔊 Voz ativada</button><label class="voice-picker">Voz <select id="voiceSelect"></select></label></section><section class="chat-panel"><h2>Conexão TikTok LIVE</h2><p class="chat-note">Digite seu @ público. Não informe sua senha.</p><div class="connect-row"><input id="usernameInput" placeholder="@seu_usuario" maxlength="30"><button id="connectBtn">Conectar LIVE</button><button id="disconnectBtn" class="voice-button">Desconectar</button></div><label class="auto-reply"><input type="checkbox" id="autoReplyToggle"><span>Responder comentários automaticamente com voz</span></label><label class="auto-reply"><input type="checkbox" id="aiToggle" checked><span>🧠 Usar IA Gemini para respostas naturais</span></label><p id="aiStatus" class="hint">Verificando IA...</p><p id="connectionStatus" class="hint">Desconectado</p><div class="recent-chat"><strong>Comentários recebidos</strong><div id="chatFeed">Os comentários aparecerão aqui.</div></div></section><p id="voiceStatus" class="hint">Voz em português • Avatar feminino</p></main><script src="/socket.io/socket.io.js"></script><script src="/app.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0a18">
+<title>Pixel LIVE Studio — Controle</title><link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">P</span><span><b>PIXEL LIVE</b><small>STUDIO 3D</small></span></a>
+    <div class="top-status"><span id="statusDot" class="status-dot"></span><span id="connectionLabel">Desconectado</span></div>
+  </header>
+  <main class="layout">
+    <section class="preview-panel">
+      <div class="section-head"><div><span class="eyebrow">AVATAR AO VIVO</span><h1>Sua streamer virtual</h1></div><span class="pill">3D • TEMPO REAL</span></div>
+      <div class="preview-frame"><iframe id="avatarPreview" src="/overlay?preview=1" title="Prévia do avatar 3D"></iframe><div class="preview-corner">PIXEL GIRL</div></div>
+      <div class="test-actions">
+        <button data-test="like" class="action-btn">♡ Curtida</button>
+        <button data-test="gift" class="action-btn gift">✦ Presente</button>
+        <button data-test="join" class="action-btn">＋ Entrada</button>
+        <button data-test="follow" class="action-btn">★ Seguir</button>
+        <button data-test="share" class="action-btn">↗ Compartilhar</button>
+      </div>
+      <div class="stats">
+        <div><strong id="statLikes">0</strong><span>Curtidas</span></div>
+        <div><strong id="statComments">0</strong><span>Comentários</span></div>
+        <div><strong id="statGifts">0</strong><span>Presentes</span></div>
+        <div><strong id="statFollowers">0</strong><span>Seguidores</span></div>
+        <div><strong id="statShares">0</strong><span>Compartilhamentos</span></div>
+        <div><strong id="statViewers">0</strong><span>Espectadores</span></div>
+      </div>
+    </section>
+    <aside class="side-column">
+      <section class="panel connection-panel">
+        <div class="section-head compact"><div><span class="eyebrow">CONEXÃO</span><h2>TikTok LIVE</h2></div><span class="live-indicator">● LIVE</span></div>
+        <label class="field-label" for="usernameInput">Usuário da transmissão</label>
+        <div class="connect-row"><input id="usernameInput" placeholder="@seu_usuario" maxlength="32" autocomplete="off"><button id="connectBtn" class="primary-btn">Conectar</button></div>
+        <button id="disconnectBtn" class="secondary-btn full">Desconectar transmissão</button>
+        <p id="connectionStatus" class="subtle">Digite o @ público de quem está ao vivo. Não use senha ou cookies.</p>
+        <div class="divider"></div>
+        <label class="toggle-row"><span><b>Resposta automática</b><small>Responde comentários com voz</small></span><input id="autoReplyToggle" type="checkbox"><i></i></label>
+        <label class="toggle-row"><span><b>IA Gemini opcional</b><small id="aiDescription">Respostas rápidas locais estão ativas</small></span><input id="aiToggle" type="checkbox"><i></i></label>
+      </section>
+      <section class="panel">
+        <div class="section-head compact"><div><span class="eyebrow">PERSONALIDADE</span><h2>Como a Pixel conversa</h2></div></div>
+        <textarea id="personalityInput" rows="3" maxlength="420">Você é uma streamer virtual brasileira, divertida, simpática, espontânea e respeitosa.</textarea>
+        <button id="savePersonality" class="secondary-btn full">Salvar personalidade</button>
+        <div class="divider"></div>
+        <label class="field-label" for="voiceSelect">Voz do avatar</label>
+        <select id="voiceSelect" class="select-field"><option>Carregando vozes...</option></select>
+        <div class="range-line"><label for="rateInput">Velocidade</label><output id="rateValue">1,00×</output></div>
+        <input id="rateInput" class="range" type="range" min="0.82" max="1.15" step="0.01" value="1">
+        <div class="range-line"><label for="volumeInput">Volume</label><output id="volumeValue">90%</output></div>
+        <input id="volumeInput" class="range" type="range" min="0" max="1" step="0.05" value="0.9">
+        <button id="voiceTestBtn" class="secondary-btn full">▶ Testar voz</button>
+      </section>
+      <section class="panel chat-panel">
+        <div class="section-head compact"><div><span class="eyebrow">INTERAÇÃO</span><h2>Chat da LIVE</h2></div><span id="chatCount" class="pill">0 mensagens</span></div>
+        <div id="chatFeed" class="chat-feed"><p class="empty-chat">Os comentários aparecerão aqui quando a LIVE conectar.</p></div>
+        <div class="test-chat-row"><input id="testComment" placeholder="Testar uma mensagem..."><button id="testChatBtn" aria-label="Enviar teste">➜</button></div>
+      </section>
+    </aside>
+  </main>
+  <footer><span>Pixel LIVE Studio 1.0</span><span>Feito para OBS • <a href="/overlay" target="_blank" rel="noreferrer">Abrir overlay limpo</a></span></footer>
+</div>
+<script src="/socket.io/socket.io.js"></script><script src="/app.js"></script>
+</body></html>

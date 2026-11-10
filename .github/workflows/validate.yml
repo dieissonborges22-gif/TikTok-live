@@ -1,0 +1,33 @@
+name: Validate Pixel LIVE Studio
+on:
+  push:
+    branches: [main, feature/pixel-live-3d-nextgen]
+  pull_request:
+    branches: [main]
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run check
+      - run: node --check public/app.js
+      - run: node --check public/overlay.js
+      - name: Check TikTok connector event names
+        run: node --input-type=module -e "import { WebcastEvent, ControlEvent } from 'tiktok-live-connector'; for (const key of ['CHAT','GIFT','LIKE','MEMBER','FOLLOW','SHARE','ROOM_USER','QUESTION_NEW']) if (!WebcastEvent[key]) throw new Error('Missing WebcastEvent.' + key); for (const key of ['ERROR','DISCONNECTED']) if (!ControlEvent[key]) throw new Error('Missing ControlEvent.' + key); console.log('TikTok connector event map OK')"
+      - name: Check Three.js avatar geometry
+        run: node --input-type=module -e "import * as THREE from 'three'; if (!THREE.CapsuleGeometry) process.exit(1); console.log('Three.js', THREE.REVISION)"
+      - name: Smoke test local server and OBS overlay
+        run: |
+          npm start > /tmp/pixel-live.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:3000/health; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:3000/overlay -o /dev/null
+          curl -fsS http://127.0.0.1:3000/vendor/three.module.js -o /dev/null
