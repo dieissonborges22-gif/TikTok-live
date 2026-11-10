@@ -1,13 +1,14 @@
 {
   "name": "pixel-live-studio",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Avatar 3D interativo para TikTok LIVE e OBS",
+  "description": "Host virtual 3D gratuita para TikTok LIVE com respostas automáticas, voz e OBS",
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "check": "node --check server.js"
+    "check": "node --check server.js && npm run check:client",
+    "check:client": "node --check public/app.js && node --check public/overlay.js"
   },
   "engines": {
     "node": ">=20.18.0"
