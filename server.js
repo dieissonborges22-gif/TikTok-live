@@ -244,7 +244,7 @@ io.on("connection", socket => {
   });
   socket.on("set-personality", value => {
     personality = cleanText(value, 420) || personality;
-    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality });
+    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality, streamTopic, forbiddenTopics, replyMode });
   });
   socket.on("host-settings", value => {
     streamTopic = cleanText(value?.streamTopic, 180) || "conversa e entretenimento";
@@ -264,26 +264,6 @@ io.on("connection", socket => {
     const safeTopic = cleanText(topic, 180);
     if (!safeTopic) return;
     const answer = await askGemini("Fale para o chat sobre: " + safeTopic, "Chat") || "Pessoal, vamos conversar sobre " + safeTopic + "! O que vocês acham? Quero ler as opiniões de vocês! 💜";
-    react("chat", answer, { source: "host-topic" });
-  });
-  socket.on("host-settings", value => {
-    streamTopic = cleanText(value?.streamTopic, 180) || "conversa e entretenimento";
-    forbiddenTopics = cleanText(value?.forbiddenTopics, 260);
-    replyMode = value?.replyMode === "all" ? "all" : "smart";
-    personality = cleanText(value?.personality, 420) || personality;
-    io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality, streamTopic, forbiddenTopics, replyMode });
-  });
-  socket.on("answer-comment", async id => {
-    const item = pendingComments.find(entry => entry.id === String(id));
-    if (!item) return;
-    const answer = await askGemini(item.comment, item.nickname) || instantReply(item.comment, item.nickname);
-    answeredIds.add(item.id);
-    react("chat", answer, { nickname: item.nickname, comment: item.comment, commentId: item.id, source: "manual" });
-  });
-  socket.on("host-topic", async topic => {
-    const safeTopic = cleanText(topic, 180);
-    if (!safeTopic) return;
-    const answer = await askGemini("Converse com o chat sobre: " + safeTopic, "Chat") || "Pessoal, vamos conversar sobre " + safeTopic + "! O que vocês acham? Quero ler as opiniões de vocês! 💜";
     react("chat", answer, { source: "host-topic" });
   });
   socket.on("voice-config", value => {
