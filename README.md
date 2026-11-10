@@ -16,7 +16,7 @@ Aplicativo local para lives do TikTok com personagem 3D próprio, respostas auto
 
 - Windows 10/11 (ou Linux/macOS).
 - Node.js 20.18 ou superior.
-- Internet para receber eventos do TikTok e carregar Three.js do CDN.
+- Internet para instalar dependências e receber eventos do TikTok. Three.js é servido localmente após `npm install`.
 - Navegador Chromium/OBS com WebGL habilitado e voz em português instalada para melhor resultado de áudio.
 
 ## Instalação no Windows
@@ -82,7 +82,7 @@ GEMINI_MODEL=gemini-2.5-flash-lite
 
 - O servidor escuta em `127.0.0.1` por padrão, evitando expor o painel à rede local.
 - A conexão de leitura do TikTok usa um projeto comunitário não oficial. O TikTok pode alterar o protocolo e nem todo evento aparece em toda região ou LIVE.
-- A página 3D carrega Three.js pelo CDN jsDelivr; é necessária conexão à internet na primeira abertura.
+- Three.js é servido localmente pelo próprio aplicativo após a instalação, sem depender de CDN durante a LIVE.
 - A sincronização da boca é animada durante o áudio sintetizado; não é captura fonema a fonema de estúdio.
 - A qualidade e naturalidade da voz dependem do mecanismo de voz instalado no computador.
 - O avatar é um modelo 3D estilizado e procedural criado no código. Modelos 3D realistas personalizados exigem um arquivo VRM/GLB e licenças próprias.
