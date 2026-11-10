@@ -21,7 +21,12 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-if not exist "node_modules\express\package.json" (
+set NEED_INSTALL=0
+if not exist "node_modules\express\package.json" set NEED_INSTALL=1
+if not exist "node_modules\socket.io\package.json" set NEED_INSTALL=1
+if not exist "node_modules\three\package.json" set NEED_INSTALL=1
+if not exist "node_modules\tiktok-live-connector\package.json" set NEED_INSTALL=1
+if "%NEED_INSTALL%"=="1" (
   echo Instalando dependencias. Aguarde...
   call npm install --no-audit --no-fund
   if errorlevel 1 (
