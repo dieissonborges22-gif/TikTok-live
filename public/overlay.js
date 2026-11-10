@@ -144,7 +144,7 @@ socket.on("voice-config",cfg=>{
  voiceName=cfg.voiceName||voiceName;voiceRate=cfg.rate||1;voiceVolume=cfg.volume??.9;voiceEnabled=cfg.enabled!==false;
  if(!voiceEnabled&&"speechSynthesis"in window){speechSynthesis.cancel();queue=[];speaking=false;mouthTarget=0;}
 });
-socket.on("connect",()=>{socket.emit("voice-config",{voiceName,rate:voiceRate,volume:voiceVolume,enabled:voiceEnabled});});
+
 if("speechSynthesis"in window){refreshVoices();speechSynthesis.onvoiceschanged=refreshVoices;}
 const reduced=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 function animate(now){
