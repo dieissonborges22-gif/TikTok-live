@@ -22,7 +22,12 @@ $("connectBtn").onclick=()=>{ $("connectionStatus").textContent="Conectando…";
 $("disconnectBtn").onclick=()=>socket.emit("disconnect-live");
 $("autoReplyToggle").onchange=e=>socket.emit("toggle-auto-reply",e.target.checked);
 $("aiToggle").onchange=e=>socket.emit("toggle-ai",e.target.checked);
-$("savePersonality").onclick=()=>{socket.emit("set-personality",$("personalityInput").value);$("savePersonality").textContent="Salvo ✓";setTimeout(()=>$("savePersonality").textContent="Salvar personalidade",1300);};
+$("savePersonality").onclick=()=>{
+  socket.emit("host-settings",{personality:$("personalityInput").value,streamTopic:$("topicInput").value,forbiddenTopics:$("forbiddenInput").value,replyMode:$("replyMode").value});
+  $("savePersonality").textContent="Salvo ✓";setTimeout(()=>$("savePersonality").textContent="Salvar configurações da host",1300);
+};
+$("topicTalkBtn").onclick=()=>{socket.emit("host-topic",$("topicTalkInput").value);$("topicTalkInput").value="";};
+$("topicTalkInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("topicTalkBtn").click();});
 $("testChatBtn").onclick=()=>{socket.emit("test-chat",$("testComment").value);$("testComment").value="";};
 $("testComment").addEventListener("keydown",e=>{if(e.key==="Enter")$("testChatBtn").click();});
 $("voiceSelect").onchange=sendVoiceConfig;
@@ -41,7 +46,7 @@ socket.on("settings-state",s=>{
   $("autoReplyToggle").checked=!!s.autoReply;$("aiToggle").checked=!!s.aiEnabled;
   $("aiToggle").disabled=!s.aiConfigured;
   $("aiDescription").textContent=s.aiConfigured?"IA pronta; resposta local é o fallback":"Sem chave Gemini: respostas locais instantâneas";
-  if(s.personality)$("personalityInput").value=s.personality;
+  if(s.personality)$("personalityInput").value=s.personality;\n  if(s.streamTopic)$("topicInput").value=s.streamTopic;\n  if(s.forbiddenTopics!==undefined)$("forbiddenInput").value=s.forbiddenTopics;\n  if(s.replyMode)$("replyMode").value=s.replyMode;
 });
 socket.on("chat-comment",m=>{
   const feed=$("chatFeed");if(feed.querySelector(".empty-chat"))feed.innerHTML="";
