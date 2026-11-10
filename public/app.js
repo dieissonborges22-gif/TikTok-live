@@ -1,105 +1,56 @@
 const socket = io();
-const character = document.getElementById("character");
-const bubble = document.getElementById("bubble");
-const mouth = document.getElementById("mouth");
-const voiceBtn = document.getElementById("voiceBtn");
-const voiceSelect = document.getElementById("voiceSelect");
-const voiceStatus = document.getElementById("voiceStatus");
-let voiceEnabled = true;
+const $ = id => document.getElementById(id);
 let voices = [];
-
-const isPortuguese = voice => (voice.lang || "").toLowerCase().startsWith("pt");
-const seemsFemale = voice => /female|woman|francisca|thalita|luciana|camila|maria|fernanda|bruna|vitoria|leticia|helena|sofia|gabriela/i.test(voice.name || "");
-
-function loadVoices() {
-  if (!("speechSynthesis" in window)) {
-    voiceStatus.textContent = "Este navegador não oferece voz sintetizada.";
-    return;
-  }
+let voiceEnabled = true;
+function loadVoices(){
+  if(!("speechSynthesis" in window)) return;
   voices = speechSynthesis.getVoices();
-  voiceSelect.innerHTML = "";
-  const portuguese = voices.filter(isPortuguese);
-  (portuguese.length ? portuguese : voices).forEach(voice => {
-    const option = document.createElement("option");
-    option.value = voice.name;
-    option.textContent = voice.name + (isPortuguese(voice) ? " (PT)" : "");
-    voiceSelect.appendChild(option);
-  });
-  const preferred = portuguese.find(seemsFemale) || portuguese[0] || voices.find(seemsFemale) || voices[0];
-  if (preferred) voiceSelect.value = preferred.name;
-  voiceStatus.textContent = preferred ? "Voz selecionada: " + preferred.name : "Instale/ative uma voz no Windows para ouvir o personagem.";
+  const select=$("voiceSelect"); select.innerHTML="";
+  const pt=voices.filter(v=>(v.lang||"").toLowerCase().startsWith("pt"));
+  const list=pt.length?pt:voices;
+  list.forEach(v=>{const op=document.createElement("option");op.value=v.name;op.textContent=v.name+" · "+v.lang;select.appendChild(op);});
+  const preferred=pt.find(v=>/francisca|luciana|camila|maria|fernanda|bruna|female|woman|vitoria|leticia/i.test(v.name))||pt[0]||voices[0];
+  if(preferred) select.value=preferred.name;
+  sendVoiceConfig();
 }
-
-function speak(message) {
-  if (!voiceEnabled || !("speechSynthesis" in window)) return;
-  speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(message);
-  const selected = voices.find(voice => voice.name === voiceSelect.value);
-  if (selected) { utterance.voice = selected; utterance.lang = selected.lang; }
-  else utterance.lang = "pt-BR";
-  utterance.rate = 0.96;
-  utterance.pitch = 1.18;
-  utterance.onstart = () => mouth.classList.add("talking");
-  utterance.onend = utterance.onerror = () => mouth.classList.remove("talking");
-  speechSynthesis.speak(utterance);
+function sendVoiceConfig(){
+  socket.emit("voice-config",{voiceName:$("voiceSelect").value,rate:Number($("rateInput").value),volume:Number($("volumeInput").value),enabled:voiceEnabled});
 }
-
-function react(type, message) {
-  character.classList.remove("react-like", "react-gift", "react-join");
-  void character.offsetWidth;
-  character.classList.add(type === "gift" ? "react-gift" : type === "join" ? "react-join" : "react-like");
-  bubble.textContent = message;
-  speak(message);
-}
-
-socket.on("character-reaction", event => react(event.type, event.message));
-socket.on("live-stats", stats => {
-  const fields = { likes: "statLikes", comments: "statComments", gifts: "statGifts", followers: "statFollowers", shares: "statShares", viewers: "statViewers" };
-  Object.entries(fields).forEach(([key, id]) => { document.getElementById(id).textContent = Number(stats[key] || 0).toLocaleString("pt-BR"); });
+function fmt(n){return Number(n||0).toLocaleString("pt-BR");}
+document.querySelectorAll("[data-test]").forEach(btn=>btn.addEventListener("click",()=>socket.emit("test-reaction",{type:btn.dataset.test})));
+$("connectBtn").onclick=()=>{ $("connectionStatus").textContent="Conectando…";socket.emit("connect-live",$("usernameInput").value); };
+$("disconnectBtn").onclick=()=>socket.emit("disconnect-live");
+$("autoReplyToggle").onchange=e=>socket.emit("toggle-auto-reply",e.target.checked);
+$("aiToggle").onchange=e=>socket.emit("toggle-ai",e.target.checked);
+$("savePersonality").onclick=()=>{socket.emit("set-personality",$("personalityInput").value);$("savePersonality").textContent="Salvo ✓";setTimeout(()=>$("savePersonality").textContent="Salvar personalidade",1300);};
+$("testChatBtn").onclick=()=>{socket.emit("test-chat",$("testComment").value);$("testComment").value="";};
+$("testComment").addEventListener("keydown",e=>{if(e.key==="Enter")$("testChatBtn").click();});
+$("voiceSelect").onchange=sendVoiceConfig;
+$("rateInput").oninput=e=>{$("rateValue").textContent=Number(e.target.value).toFixed(2).replace(".",",")+"×";sendVoiceConfig();};
+$("volumeInput").oninput=e=>{$("volumeValue").textContent=Math.round(Number(e.target.value)*100)+"%";sendVoiceConfig();};
+$("voiceTestBtn").onclick=()=>socket.emit("test-chat","Oi! Essa é minha voz. Estou pronta para conversar com vocês na live!");
+socket.on("live-status",s=>{
+  $("connectionLabel").textContent=s.connected?"Conectado · @"+s.username:s.connecting?"Conectando…":"Desconectado";
+  $("connectionStatus").textContent=s.error||s.message||(s.connected?"Conectado à LIVE de @"+s.username:s.connecting?"Aguardando conexão com o TikTok…":"Digite o @ público de quem está ao vivo. Não use senha ou cookies.");
+  $("statusDot").classList.toggle("connected",!!s.connected);
+  $("connectBtn").disabled=!!s.connected||!!s.connecting;
+  $("connectBtn").textContent=s.connecting?"Aguarde…":s.connected?"Conectado":"Conectar";
 });
-
-document.getElementById("likeBtn").onclick = () => socket.emit("test-like");
-document.getElementById("giftBtn").onclick = () => socket.emit("test-gift");
-document.getElementById("joinBtn").onclick = () => socket.emit("test-join");
-document.getElementById("testChatBtn").onclick = () => socket.emit("test-chat", document.getElementById("testComment").value || "Oi, tudo bem?");
-document.getElementById("testComment").addEventListener("keydown", event => { if (event.key === "Enter") document.getElementById("testChatBtn").click(); });
-
-voiceBtn.onclick = () => {
-  voiceEnabled = !voiceEnabled;
-  if (!voiceEnabled && "speechSynthesis" in window) speechSynthesis.cancel();
-  voiceBtn.textContent = voiceEnabled ? "🔊 Voz ativada" : "🔇 Voz desligada";
-  if (voiceEnabled) speak("Oii, chat!");
-};
-voiceSelect.onchange = () => speak("Oi! Essa é minha voz.");
-document.getElementById("connectBtn").onclick = () => {
-  document.getElementById("connectionStatus").textContent = "Conectando...";
-  socket.emit("connect-live", document.getElementById("usernameInput").value);
-};
-document.getElementById("disconnectBtn").onclick = () => socket.emit("disconnect-live");
-document.getElementById("autoReplyToggle").onchange = event => socket.emit("toggle-auto-reply", event.target.checked);
-document.getElementById("aiToggle").onchange = event => socket.emit("toggle-ai", event.target.checked);
-socket.on("ai-status", status => {
-  document.getElementById("aiToggle").checked = status.enabled;
-  document.getElementById("aiStatus").textContent = status.configured
-    ? "Gemini configurado. A IA será usada quando estiver ativada."
-    : "Sem chave Gemini: respostas locais gratuitas continuam funcionando.";
+socket.on("live-stats",s=>{const map={likes:"statLikes",comments:"statComments",gifts:"statGifts",followers:"statFollowers",shares:"statShares",viewers:"statViewers"};Object.entries(map).forEach(([k,id])=>$(id).textContent=fmt(s[k]));});
+socket.on("settings-state",s=>{
+  $("autoReplyToggle").checked=!!s.autoReply;$("aiToggle").checked=!!s.aiEnabled;
+  $("aiToggle").disabled=!s.aiConfigured;
+  $("aiDescription").textContent=s.aiConfigured?"IA pronta; resposta local é o fallback":"Sem chave Gemini: respostas locais instantâneas";
+  if(s.personality)$("personalityInput").value=s.personality;
 });
-socket.on("live-status", status => {
-  document.getElementById("connectionStatus").textContent = status.error || (status.connected ? "Conectado à LIVE de @" + status.username : "Desconectado");
-  document.getElementById("connectBtn").disabled = Boolean(status.connected);
+socket.on("chat-comment",m=>{
+  const feed=$("chatFeed");if(feed.querySelector(".empty-chat"))feed.innerHTML="";
+  const item=document.createElement("div");item.className="chat-item";
+  const name=document.createElement("b");name.textContent="@"+m.nickname;
+  item.append(name,document.createTextNode(m.comment));feed.appendChild(item);
+  while(feed.children.length>35)feed.removeChild(feed.firstChild);
+  feed.scrollTop=feed.scrollHeight;
+  $("chatCount").textContent=feed.children.length+" mensagens";
 });
-socket.on("auto-reply-status", enabled => { document.getElementById("autoReplyToggle").checked = enabled; });
-socket.on("chat-comment", comment => {
-  const line = document.createElement("p");
-  line.textContent = "@" + comment.nickname + ": " + comment.comment;
-  const feed = document.getElementById("chatFeed");
-  if (feed.textContent.includes("Os comentários aparecerão")) feed.textContent = "";
-  feed.prepend(line);
-  while (feed.children.length > 6) feed.lastChild.remove();
-});
-
-if ("speechSynthesis" in window) {
-  loadVoices();
-  speechSynthesis.onvoiceschanged = loadVoices;
-  setTimeout(loadVoices, 700);
-}
+socket.on("system-notice",n=>{$("connectionStatus").textContent=n.message;});
+if("speechSynthesis" in window){loadVoices();speechSynthesis.onvoiceschanged=loadVoices;setTimeout(loadVoices,500);}
