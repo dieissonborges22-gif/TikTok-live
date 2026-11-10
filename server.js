@@ -26,6 +26,7 @@ let connecting = false;
 let autoReply = false;
 let aiEnabled = false;
 let personality = "Você é uma streamer virtual brasileira, divertida, simpática, espontânea e respeitosa.";
+let voiceConfig = { voiceName: "", rate: 1, volume: 0.9, enabled: true };
 let totals = { likes: 0, comments: 0, gifts: 0, followers: 0, shares: 0, viewers: 0 };
 let lastLikeReactionAt = 0;
 let lastGlobalReplyAt = 0;
@@ -191,6 +192,7 @@ io.on("connection", socket => {
   socket.emit("live-status", { connected: Boolean(connection), connecting, username: currentUsername });
   socket.emit("live-stats", { ...totals });
   socket.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality });
+  socket.emit("voice-config", voiceConfig);
 
   socket.on("connect-live", async rawName => {
     const name = cleanText(rawName, 40).replace(/^@/, "");
@@ -235,12 +237,15 @@ io.on("connection", socket => {
     personality = cleanText(value, 420) || personality;
     io.emit("settings-state", { autoReply, aiEnabled, aiConfigured: Boolean(process.env.GEMINI_API_KEY), personality });
   });
-  socket.on("voice-config", value => io.emit("voice-config", {
-    voiceName: cleanText(value?.voiceName, 120),
-    rate: Math.min(1.15, Math.max(0.82, Number(value?.rate) || 1)),
-    volume: Math.min(1, Math.max(0, Number(value?.volume) || 0.9)),
-    enabled: value?.enabled !== false
-  }));
+  socket.on("voice-config", value => {
+    voiceConfig = {
+      voiceName: cleanText(value?.voiceName, 120),
+      rate: Math.min(1.15, Math.max(0.82, Number(value?.rate) || 1)),
+      volume: Math.min(1, Math.max(0, Number(value?.volume) || 0.9)),
+      enabled: value?.enabled !== false
+    };
+    io.emit("voice-config", voiceConfig);
+  });
   socket.on("test-reaction", ({ type } = {}) => {
     const tests = {
       like: ["like", "Aaaah, obrigada pelas curtidas! Vocês são maravilhosos! 💗"],
