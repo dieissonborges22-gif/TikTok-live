@@ -10,7 +10,7 @@ let mood="idle",moodUntil=0,blink=0,nextBlink=performance.now()+2400;
 let mouthTarget=0,mouthValue=0;
 const clock=new THREE.Clock();
 const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(31,1,.1,100);
+const camera=new THREE.PerspectiveCamera(35,1,.1,100);
 camera.position.set(0,2.45,8.2);
 camera.lookAt(0,2.35,0);
 let renderer;
