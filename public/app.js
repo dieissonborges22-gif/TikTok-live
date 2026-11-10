@@ -46,13 +46,19 @@ socket.on("settings-state",s=>{
   $("autoReplyToggle").checked=!!s.autoReply;$("aiToggle").checked=!!s.aiEnabled;
   $("aiToggle").disabled=!s.aiConfigured;
   $("aiDescription").textContent=s.aiConfigured?"IA pronta; resposta local é o fallback":"Sem chave Gemini: respostas locais instantâneas";
-  if(s.personality)$("personalityInput").value=s.personality;\n  if(s.streamTopic)$("topicInput").value=s.streamTopic;\n  if(s.forbiddenTopics!==undefined)$("forbiddenInput").value=s.forbiddenTopics;\n  if(s.replyMode)$("replyMode").value=s.replyMode;
+  if(s.personality)$("personalityInput").value=s.personality;
+  if(s.streamTopic)$("topicInput").value=s.streamTopic;
+  if(s.forbiddenTopics!==undefined)$("forbiddenInput").value=s.forbiddenTopics;
+  if(s.replyMode)$("replyMode").value=s.replyMode;
 });
 socket.on("chat-comment",m=>{
   const feed=$("chatFeed");if(feed.querySelector(".empty-chat"))feed.innerHTML="";
   const item=document.createElement("div");item.className="chat-item";
   const name=document.createElement("b");name.textContent="@"+m.nickname;
-  item.append(name,document.createTextNode(m.comment));feed.appendChild(item);
+  const text=document.createElement("span");text.textContent=m.comment;
+  const answer=document.createElement("button");answer.className="answer-comment";answer.textContent="Responder";
+  answer.onclick=()=>{socket.emit("answer-comment",m.id);answer.textContent="Enviado ✓";answer.disabled=true;};
+  item.append(name,text,answer);feed.appendChild(item);
   while(feed.children.length>35)feed.removeChild(feed.firstChild);
   feed.scrollTop=feed.scrollHeight;
   $("chatCount").textContent=feed.children.length+" mensagens";
