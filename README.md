@@ -26,9 +26,8 @@ Aplicativo local para lives do TikTok com personagem 3D próprio, respostas auto
 
 1. Instale Node.js 22 LTS (recomendado).
 2. Baixe o ZIP da branch `feature/ai-host-free-local` pelo GitHub e extraia.
-3. Abra o Prompt de Comando ou PowerShell dentro da pasta extraída.
-4. Reinicie o terminal após a instalação do Node.js.
-5. Instale as dependências:
+3. Reinicie o terminal após a instalação do Node.js.
+4. Dê dois cliques em `INICIAR.bat`. Ele instala dependências ausentes, verifica a sintaxe e abre o servidor. Se preferir usar o terminal, abra CMD/PowerShell na pasta e execute:
 
 ```powershell
 npm install --no-audit --no-fund
