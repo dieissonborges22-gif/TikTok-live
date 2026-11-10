@@ -1,7 +1,7 @@
 name: Validate Pixel LIVE Studio
 on:
   push:
-    branches: [main, feature/pixel-live-3d-nextgen]
+    branches: [main, feature/pixel-live-3d-nextgen, feature/ai-host-free-local]
   pull_request:
     branches: [main]
 jobs:
