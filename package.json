@@ -1,17 +1,22 @@
 {
-  "name": "tiktok-live-interactive",
-  "version": "0.2.0",
+  "name": "pixel-live-studio",
+  "version": "1.0.0",
   "private": true,
-  "description": "Personagem interativo para TikTok LIVE",
-  "main": "server.js",
+  "type": "module",
+  "description": "Avatar 3D interativo para TikTok LIVE e OBS",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "check": "node --check server.js"
+  },
+  "engines": {
+    "node": ">=20.18.0"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "socket.io": "^4.8.1",
-    "tiktok-live-connector": "^2.1.0",
-    "dotenv": "^16.4.7"
+    "tiktok-live-connector": "^2.5.0",
+    "three": "^0.180.0"
   }
 }
