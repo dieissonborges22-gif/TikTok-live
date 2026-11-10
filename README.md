@@ -1,4 +1,4 @@
-# Pixel LIVE Studio — versão 1.0
+# Pixel LIVE Studio — versão 2.0
 
 Aplicativo local para lives do TikTok com personagem 3D próprio, respostas automáticas, voz e overlay transparente para OBS.
 
@@ -8,7 +8,7 @@ Aplicativo local para lives do TikTok com personagem 3D próprio, respostas auto
 - **Animações:** respiração, movimento de cabeça, piscadas, fala, reações a curtidas, presentes, entradas, follows e compartilhamentos.
 - **Boca animada:** movimento sincronizado com a fala sintetizada do navegador.
 - **TikTok LIVE:** integração com `tiktok-live-connector 2.5.x`, usando o formato atual de eventos e campos aninhados.
-- **Respostas automáticas:** respostas locais imediatas, em português, sem chave de IA; opção Gemini para respostas mais específicas.
+- **Host configurável:** nome/persona, tema da live, assuntos a evitar e modo inteligente ou resposta a todos os comentários.\n- **Fila do chat:** botão para escolher e priorizar manualmente qualquer comentário recente.\n- **Puxar assunto:** comando para a personagem iniciar uma conversa quando você quiser.\n- **Respostas locais:** regras em português sem chave ou custo por chamada; Gemini opcional para respostas realmente generativas.
 - **Controles:** personalidade editável, voz, velocidade, volume, testes de eventos, métricas e chat recente.
 - **OBS:** página limpa e transparente em `http://127.0.0.1:3000/overlay`.
 
@@ -22,7 +22,7 @@ Aplicativo local para lives do TikTok com personagem 3D próprio, respostas auto
 ## Instalação no Windows
 
 1. Instale Node.js 20 LTS ou superior.
-2. Baixe o ZIP desta branch pelo GitHub e extraia.
+2. Baixe o ZIP da branch `feature/ai-host-free-local` pelo GitHub e extraia.
 3. Abra o Prompt de Comando ou PowerShell dentro da pasta extraída.
 4. Instale as dependências:
 
@@ -30,14 +30,14 @@ Aplicativo local para lives do TikTok com personagem 3D próprio, respostas auto
 npm install
 ```
 
-5. Opcional: copie `.env.example` para `.env` e informe sua chave Gemini.
-6. Inicie o aplicativo:
+6. Opcional: copie `.env.example` para `.env` e informe sua chave Gemini.
+7. Inicie o aplicativo:
 
 ```powershell
 npm start
 ```
 
-7. Abra no navegador: `http://127.0.0.1:3000`.
+8. Abra no navegador: `http://127.0.0.1:3000`.
 
 ## Usar no OBS
 
