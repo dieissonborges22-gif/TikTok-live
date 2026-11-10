@@ -16,6 +16,8 @@ app.use(express.json({ limit: "12kb" }));
 app.use(express.static("public", { extensions: ["html"] }));
 app.get("/health", (_req, res) => res.json({ ok: true, app: "Pixel LIVE Studio", version: "1.0.0", connected: Boolean(connection) }));
 const overlayFile = fileURLToPath(new URL("./public/overlay.html", import.meta.url));
+const threeModuleFile = fileURLToPath(new URL("./node_modules/three/build/three.module.js", import.meta.url));
+app.get("/vendor/three.module.js", (_req, res) => res.sendFile(threeModuleFile));
 app.get("/overlay", (_req, res) => res.sendFile(overlayFile));
 
 let connection = null;
